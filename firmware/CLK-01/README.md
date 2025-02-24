@@ -2,9 +2,11 @@
 
 <center><image width="400" src="https://image.easyeda.com/pullimage/DY2cV2TE9SzW4QEGUBPfhBxzWKnjN2z8livtnTUQ.jpeg"></center>
 
-## Hardware
+Based on [AlexGyver's NixieClock_v2] with a lot of fixes, improvements and refactorings.
 
-Hosted on [EasyEDA/phts/CLK-01].
+## PCB
+
+Hosted on: [OSHWLab/phts/CLK-01].
 
 ![PHTS CLK-01](https://image.easyeda.com/documents/f8e8fa42a9a74f4194dbb38830f3f9a2.png)
 
@@ -122,6 +124,7 @@ To apply new time toggle "MODE" switch to "CLOCK" position.
 
 Clone `local_settings.h.example` into `local_settings.h` and redefine variables.
 
-[easyeda/phts/clk-01]: https://oshwlab.com/phts/CLK-01
+[alexgyver's nixieclock_v2]: https://github.com/AlexGyver/NixieClock_v2
+[OSHWLab/phts/clk-01]: https://oshwlab.com/phts/CLK-01
 [usb-serial ch340 driver]: https://www.google.com/search?q=USB-SERIAL+CH340
 [manual]: https://tsaryk.com/CLK-01/manual
