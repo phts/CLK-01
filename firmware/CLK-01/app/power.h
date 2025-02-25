@@ -32,6 +32,61 @@ public:
       state = POWER_ON;
       return;
     }
+#if STANDBY_WAKEUP_ON_PRETTY_NUMBERS
+    if (time.isNewHour)
+    {
+      wakeupOnMinutesSize = 1;
+      wakeupOnMinutes[0] = time.hrs;
+      switch (time.hrs)
+      {
+      case 10:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 10;
+        break;
+      case 11:
+        break;
+      case 12:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 21;
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 34;
+        break;
+      case 13:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 31;
+        break;
+      case 14:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 41;
+        break;
+      case 15:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 51;
+        break;
+      case 20:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 2;
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 25;
+        break;
+      case 21:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 12;
+        break;
+      case 23:
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 32;
+        wakeupOnMinutes[wakeupOnMinutesSize++] = 45;
+        break;
+      default:
+        break;
+      }
+    }
+    if (!nightMode.isNightlight() && time.changed)
+    {
+      if (!STANDBY_NIGHT_SLEEP || !nightMode.isNight())
+      {
+        for (byte i = 0; i < wakeupOnMinutesSize; i++)
+        {
+          if (time.mins == wakeupOnMinutes[i])
+          {
+            resetStandbyTimer();
+            return;
+          }
+        }
+      }
+    }
+#endif
 #if STANDBY_WAKEUP_RANDOM
     if (time.isNewHour)
     {
@@ -42,18 +97,6 @@ public:
         debug(wakeupRandomMinutes[i]);
       }
     }
-#endif
-#if STANDBY_WAKEUP_ON_TIME_CHANGE
-    if (!nightMode.isNightlight() && time.changed && time.mins % STANDBY_WAKEUP_ON_TIME_CHANGE_MINS == 0)
-    {
-      if (!STANDBY_NIGHT_SLEEP || !nightMode.isNight())
-      {
-        resetStandbyTimer();
-        return;
-      }
-    }
-#endif
-#if STANDBY_WAKEUP_RANDOM
     if (!nightMode.isNightlight() && time.changed)
     {
       if (!STANDBY_NIGHT_SLEEP || !nightMode.isNight())
@@ -66,6 +109,16 @@ public:
             return;
           }
         }
+      }
+    }
+#endif
+#if STANDBY_WAKEUP_ON_TIME_CHANGE
+    if (!nightMode.isNightlight() && time.changed && time.mins % STANDBY_WAKEUP_ON_TIME_CHANGE_MINS == 0)
+    {
+      if (!STANDBY_NIGHT_SLEEP || !nightMode.isNight())
+      {
+        resetStandbyTimer();
+        return;
       }
     }
 #endif
@@ -124,6 +177,10 @@ public:
 private:
   timerMinim standbyTimer;
   byte state = POWER_ON;
+#if STANDBY_WAKEUP_ON_PRETTY_NUMBERS
+  byte wakeupOnMinutes[10];
+  byte wakeupOnMinutesSize = 0;
+#endif
 #if STANDBY_WAKEUP_RANDOM
   byte wakeupRandomMinutes[STANDBY_WAKEUP_RANDOM_TIMES];
   byte wakeupRandomMinutesSize = sizeof(wakeupRandomMinutes);
